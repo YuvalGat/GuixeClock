@@ -1,4 +1,5 @@
 import UIKit
+import Foundation
 
 public func getCircleLayer(x: Int, y: Int, r: Int, color: CGColor) -> CAShapeLayer {
     let circlePath = UIBezierPath(arcCenter: CGPoint(x: x, y: y), radius: CGFloat(r), startAngle: 0, endAngle: CGFloat(2 * Double.pi), clockwise: true)
@@ -12,15 +13,17 @@ public func getCircleLayer(x: Int, y: Int, r: Int, color: CGColor) -> CAShapeLay
 
 /*:
  - Note:
- A lot of mathematics were applied here. The general formula for rotating (x, y) around (0, 0) by angle θ is shown in the PDF file. θ is calculated for the minute's hand and for the hour's hand, after which we apply the formulas for each coordinate of the arrows.
+ A lot of mathematics were applied here. The general formula for rotating (x, y) around (0, 0) by angle θ is shown in the PDF file. θ is calculated for the minutes hand and for the hours hand, after which we apply the formulas for each of the arrow's coordinates.
  
  The variables h, l1, d, k1, l2, k2 are also described in the PDF file.
  
- I've decided to use a Dictionary instead of an array for readability reasons
+ I've decided to use a Dictionary instead of an array for readability reasons.
+ 
+ The PDF File was generated with LaTeX using TikZ.
  */
 
-public func getFrontArrowCoordinatesByTime(hr: Double, h: Double, l1: Double, d: Double, k1: Double) -> [String: CGPoint] {
-    let hrTheta: Double = (hr * 30).truncatingRemainder(dividingBy: 360);
+public func getFrontArrowCoordinatesByTime(hr: Double, min: Double, h: Double, l1: Double, d: Double, k1: Double) -> [String: CGPoint] {
+    let hrTheta: Double = (hr * 30 + min / 2).truncatingRemainder(dividingBy: 360);
     
     let arrowFrontBackTopX = -h * cosd(hrTheta) + 300;
     let arrowFrontBackTopY = -h * sind(hrTheta) + 300;
@@ -105,4 +108,51 @@ public extension UIColor {
             blue: rgb & 0xFF
         )
     }
+}
+
+extension Date {
+    public func setTime(hour: Int, min: Int, sec: Int, timeZoneAbbrev: String = "UTC") -> Date? {
+        let x: Set<Calendar.Component> = [.year, .month, .day, .hour, .minute, .second]
+        let cal = Calendar.current
+        var components = cal.dateComponents(x, from: self)
+        
+        components.timeZone = TimeZone(abbreviation: timeZoneAbbrev)
+        components.hour = hour
+        components.minute = min
+        components.second = sec
+        
+        return cal.date(from: components)
+    }
+}
+
+public func getClosestRoundMinute() -> Date {
+    var localTimeZoneAbbreviation: String { return TimeZone.current.abbreviation() ?? "" }
+    
+    let currentHour: Int = Calendar.current.component(.hour, from: Date())
+    let currentMinute: Int = Calendar.current.component(.minute, from: Date())
+    
+    let inOneMinute = Date().setTime(hour: currentHour, min: currentMinute + 1, sec: 0, timeZoneAbbrev: localTimeZoneAbbreviation)
+    
+    return inOneMinute!
+}
+
+func mod(_ a: Int, _ n: Int) -> Int {
+    let r = a % n
+    return r >= 0 ? r : r + n
+}
+
+public func getCoordinatesOfLabelByHour(hr: Int) -> CGPoint {
+    let theta = Double(mod(30 * hr - 90, 360))
+    return CGPoint(
+        x: 280 * cosd(theta) + 250,
+        y: 280 * sind(theta) + 280
+    )
+}
+
+public func getCurrentHour() -> Double {
+    return Double(Calendar.current.component(.hour, from: Date()))
+}
+
+public func getCurrentMinute() -> Double {
+    return Double(Calendar.current.component(.minute, from: Date()))
 }
