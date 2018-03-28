@@ -4,24 +4,24 @@ public class Clock: UIView {
     var words: [String]
     public init() {
         words = [
-            "Desire",
-            "Love",
-            "Joy",
-            "Sadness",
-            "Happiness",
-            "Food",
-            "Table",
-            "Macbook",
-            "Apple",
-            "Hat",
-            "Charger",
-            "iPhone"
+            "DESIRE",
+            "LOVE",
+            "JOY",
+            "MOUSE",
+            "BAG",
+            "FOOD",
+            "TABLE",
+            "CUP",
+            "APPLE",
+            "HAT",
+            "CHARGER",
+            "IPHONE"
         ]
         
         let frame = CGRect(x: 0, y: 0, width: 700, height: 700)
         super.init(frame: frame)
-     
-        update(circleColor: UIColor(rgb: 0xF7F7E2).cgColor, backgroundColor: .purple, hourHandColor: UIColor.white.cgColor, minuteHandColor: UIColor.white.cgColor, words: self.words)
+        
+        updateWithDefaults()
         
         // Get closest minute, at which we start a timer which updates the UIView every minute, so that the clock functions like a normal
         // This way, the clock is precise.
@@ -32,13 +32,20 @@ public class Clock: UIView {
     }
     
     @objc func updateWithDefaults() {
-        update(circleColor: UIColor(rgb: 0xF7F7E2).cgColor, backgroundColor: .purple, hourHandColor: UIColor.white.cgColor, minuteHandColor: UIColor.white.cgColor, words: self.words)
+        update(
+            circleColor: UIColor(rgb: 0xfa9a94).cgColor,
+               backgroundColor: UIColor(rgb: 0xfda94f),
+               hourHandColor: UIColor(rgb: 0x6e5bba).cgColor,
+               minuteHandColor: UIColor(rgb: 0x6e5bba).cgColor,
+               circleISColor: UIColor(rgb: 0xed6355).cgColor,
+               words: self.words
+        )
     }
     
-    func update(circleColor: CGColor, backgroundColor: UIColor, hourHandColor: CGColor, minuteHandColor: CGColor, words: [String]) {
+    func update(circleColor: CGColor, backgroundColor: UIColor, hourHandColor: CGColor, minuteHandColor: CGColor, circleISColor: CGColor, words: [String]) {
         self.backgroundColor = backgroundColor
         
-        // Create circle layer
+        // Create the clock, which is a circle layer
         let circ = getCircleLayer(x: 300, y: 300, r: 300, color: circleColor)
         self.layer.addSublayer(circ)
         
@@ -59,15 +66,13 @@ public class Clock: UIView {
         // Variables for arrow sizes; Described in the PDF file
         let h = 15.0
         let l1 = 180.0
-        let d = 30.0
+        let d = 25.0
         let k1 = 45.0
-        let l2 = 270.0
+        let l2 = 255.0
         let k2 = 15.0
         
         let min = getCurrentMinute()
         let hr = getCurrentHour()
-        //        let min = Double(arc4random_uniform(60))
-        //        let hr = Double(arc4random_uniform(12))
         
         // Create the paths for the clock's hands
         let hourHand: UIBezierPath = createHourHandPath(hr: hr, min: min, h: h, l1: l1, d: d, k1: k1)
@@ -98,7 +103,7 @@ public class Clock: UIView {
         let currentMinuteForSentence = Int(getCurrentMinute())
         let currentHourForSentence = Int(getCurrentHour()) - 1
         
-        let sentence = UILabel(frame: CGRect(x: 0, y: 600, width: 600, height: 100))
+        let sentence = UILabel(frame: CGRect(x: 0, y: 585, width: 600, height: 100))
         sentence.textAlignment = .center
         
         let firstWordIndex = mod(Int(round(Double(currentMinuteForSentence) / 5.0)) - 1, 12)
@@ -111,21 +116,36 @@ public class Clock: UIView {
         let firstWord = words[firstWordIndex]
         let secondWord = words[secondWordIndex]
         
-        sentence.text = "\(firstWord) Is \(secondWord)"
-        sentence.font = getParadiseRoadFont(size: 40)
+        sentence.text = "\(firstWord) IS \(secondWord)"
+        sentence.font = getSoWhatFont(size: 60)
         
         sentence.tag = 99
         
         self.addSubview(sentence)
         
+        // Add the circle behind the word "IS"
+        let circleBehindIS = getCircleLayer(x: 300, y: 300, r: 50, color: circleISColor)
+        circleBehindIS.shadowOpacity = 0.3
+        self.layer.addSublayer(circleBehindIS)
+        
+        // Add the rotating "IS" label. Rotation is dependent on the hour arrow's direction, and is therefore calculated with the same formula.
+        let labelForIS = UILabel(frame: CGRect(x: 270, y: 270, width: 60, height: 60))
+        
+        labelForIS.text = "IS"
+        labelForIS.textAlignment = .center
+        labelForIS.font = getSoWhatFont(size: 60)
+        labelForIS.transform = CGAffineTransform(rotationAngle: CGFloat(Double(mod(Int(round(hr * 30 + min / 2)), 360)).degrees()))
+        
+        self.addSubview(labelForIS)
+        
         // Initialise the buttons with the corresponding words
         for hr in 1...12 {
             let coords: CGPoint = getCoordinatesOfLabelByHour(hr: hr)
-            let button = UIButton(frame: CGRect(x: coords.x, y: coords.y, width: 100, height: 50))
+            let button = UIButton(frame: CGRect(x: coords.x - 50, y: coords.y - 25, width: 100, height: 50))
             
             button.setTitle(words[hr - 1], for: .normal)
             button.setTitleColor(.black, for: .normal)
-            button.titleLabel?.font = getParadiseRoadFont(size: 20)
+            button.titleLabel?.font = getSoWhatFont(size: 30)
             
             self.addSubview(button)
         }

@@ -33,3 +33,9 @@ extension Date {
         return cal.date(from: components)
     }
 }
+
+extension Double {
+    func degrees() -> Double {
+        return self * .pi / 180
+    }
+}

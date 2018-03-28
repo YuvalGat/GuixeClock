@@ -16,18 +16,16 @@ public func getCircleLayer(x: Int, y: Int, r: Int, color: CGColor) -> CAShapeLay
 public func getCoordinatesOfLabelByHour(hr: Int) -> CGPoint {
     let theta = Double(mod(30 * hr - 90, 360))
     return CGPoint(
-        x: 280 * cosd(theta) + 250,
-        y: 280 * sind(theta) + 280
+        x: 270 * cosd(theta) + 300,
+        y: 270 * sind(theta) + 300
     )
 }
 
-// Returns the paradise_road.ttf font, with a given size
-public func getParadiseRoadFont(size: Int) -> UIFont {
-    let fontCFURL = Bundle.main.url(forResource: "paradise_road", withExtension: "ttf")! as CFURL
+// Returns the SoWhat-Regular.ttf font, with a given font size
+public func getSoWhatFont(size: Int) -> UIFont {
+    let fontCFURL = Bundle.main.url(forResource: "SoWhat-Regular", withExtension: "ttf")! as CFURL
     
     CTFontManagerRegisterFontsForURL(fontCFURL, CTFontManagerScope.process, nil)
     
-    let paradiseRoad = UIFont(name: "ParadiseRoad", size: CGFloat(size))!
-    
-    return paradiseRoad
+    return UIFont(name: "SoWhat-Regular", size: CGFloat(size))!
 }
