@@ -13,7 +13,7 @@
  The generated sentence will appear below the clock itself.
  
  - Note:
- A lot of mathematics were applied on the Clock's hands in order to get it rotating properly. The formulas I used and the variable names are described in a PDF file I created using LaTeX and TikZ.
+ A lot of mathematics were applied on the Clock's hands in order to get them rotating properly. The formulas I used and the variable names are described in a PDF file I created using LaTeX and TikZ.
  */
 
 import UIKit
@@ -22,3 +22,4 @@ import PlaygroundSupport
 let clock = Clock()
 
 PlaygroundPage.current.liveView = clock
+
