@@ -1,8 +1,14 @@
 import UIKit
 
-public class Clock: UIView {
+public class Clock: UIView  {
+    var bgColor: UIColor!
+    
     var words: [String]
+    
+    var backgroundColorPicker: ChromaColorPicker!
+    
     public init() {
+        bgColor = UIColor(rgb: 0xb708ad)
         words = [
             "DESIRE",
             "LOVE",
@@ -18,7 +24,7 @@ public class Clock: UIView {
             "IPHONE"
         ]
         
-        let frame = CGRect(x: 0, y: 0, width: 700, height: 700)
+        let frame = CGRect(x: 0, y: 0, width: 800, height: 700)
         super.init(frame: frame)
         
         updateWithDefaults()
@@ -29,46 +35,57 @@ public class Clock: UIView {
         
         let timer = Timer(fireAt: closestMinute, interval: 60, target: self, selector: #selector(self.updateWithDefaults), userInfo: nil, repeats: true)
         RunLoop.main.add(timer, forMode: RunLoopMode.commonModes)
+        
+        backgroundColorPicker = ChromaColorPicker(frame: CGRect(x: 550, y: 0, width: 200, height: 200))
+        backgroundColorPicker.delegate = self
+        
+        backgroundColorPicker.padding = 10
+        backgroundColorPicker.stroke = 3
+        
+        self.addSubview(backgroundColorPicker)
     }
     
     @objc func updateWithDefaults() {
         update(
-            circleColor: UIColor(rgb: 0xfa9a94).cgColor,
-               backgroundColor: UIColor(rgb: 0xfda94f),
-               hourHandColor: UIColor(rgb: 0x6e5bba).cgColor,
-               minuteHandColor: UIColor(rgb: 0x6e5bba).cgColor,
-               circleISColor: UIColor(rgb: 0xed6355).cgColor,
+            circleColor: UIColor(rgb: 0x0a97b7).cgColor,
+               handsColor: UIColor(rgb: 0x55cfd6).cgColor,
+               circleISColor: UIColor(rgb: 0xfceebf).cgColor,
                words: self.words
         )
     }
     
-    func update(circleColor: CGColor, backgroundColor: UIColor, hourHandColor: CGColor, minuteHandColor: CGColor, circleISColor: CGColor, words: [String]) {
-        self.backgroundColor = backgroundColor
+    func update(circleColor: CGColor, handsColor: CGColor, circleISColor: CGColor, words: [String]) {
+        self.backgroundColor = bgColor
         
-        // Create the clock, which is a circle layer
-        let circ = getCircleLayer(x: 300, y: 300, r: 300, color: circleColor)
-        self.layer.addSublayer(circ)
-        
-        // Remove the already-existing hands
-        self.layer.sublayers!.forEach {
-            if $0.name == "minuteHand" || $0.name == "hourHand" {
-                $0.removeFromSuperlayer()
+        // We must first remove the already-existing layers from the pervious update() call and UILabels
+        if self.layer.sublayers != nil {
+            self.layer.sublayers!.forEach {
+                if let name = $0.name {
+                    if ["clockCircle", "minuteHand", "hourHand", "IS"].contains(name) {
+                        $0.removeFromSuperlayer()
+                    }
+                }
             }
         }
         
         // Remove the generated sentence so it can be regenerated
         self.subviews.forEach {
-            if $0.tag == 99 {
+            if [99, 199].contains($0.tag) {
                 $0.removeFromSuperview()
             }
         }
         
+        // Create the clock, which is a circle layer
+        let circ = getCircleLayer(x: 300, y: 300, r: 300, color: circleColor)
+        circ.name = "clockCircle"
+        self.layer.addSublayer(circ)
+        
         // Variables for arrow sizes; Described in the PDF file
         let h = 15.0
-        let l1 = 180.0
+        let l1 = 170.0
         let d = 25.0
         let k1 = 45.0
-        let l2 = 255.0
+        let l2 = 245.0
         let k2 = 15.0
         
         let min = getCurrentMinute()
@@ -81,7 +98,7 @@ public class Clock: UIView {
         // Create layers and properties and add to view
         let hourLayer = CAShapeLayer()
         hourLayer.path = hourHand.cgPath
-        hourLayer.fillColor = hourHandColor
+        hourLayer.fillColor = handsColor
         
         hourLayer.shadowOpacity = 0.3
         
@@ -91,7 +108,7 @@ public class Clock: UIView {
         
         let minuteLayer = CAShapeLayer()
         minuteLayer.path = minuteHand.cgPath
-        minuteLayer.fillColor = minuteHandColor
+        minuteLayer.fillColor = handsColor
         
         minuteLayer.shadowOpacity = 0.3
         
@@ -134,6 +151,7 @@ public class Clock: UIView {
         labelForIS.text = "IS"
         labelForIS.textAlignment = .center
         labelForIS.font = getSoWhatFont(size: 60)
+        labelForIS.tag = 199
         labelForIS.transform = CGAffineTransform(rotationAngle: CGFloat(Double(mod(Int(round(hr * 30 + min / 2)), 360)).degrees()))
         
         self.addSubview(labelForIS)
@@ -153,5 +171,12 @@ public class Clock: UIView {
     
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension Clock: ChromaColorPickerDelegate {
+    public func colorPickerDidChooseColor(_ colorPicker: ChromaColorPicker, color: UIColor) {
+        self.bgColor = color
+        updateWithDefaults()
     }
 }
