@@ -4,6 +4,8 @@ public class Clock: UIView  {
     var words: [String]
     
     var backgroundColorPicker: ChromaColorPicker!
+    var clockColorPicker: ChromaColorPicker!
+    var handsColorPicker: ChromaColorPicker!
     
     public init() {
         words = [
@@ -24,32 +26,75 @@ public class Clock: UIView  {
         let frame = CGRect(x: 0, y: 0, width: 900, height: 700)
         super.init(frame: frame)
         
-        // Set background-color picker properties and hide inner components
-        backgroundColorPicker = ChromaColorPicker(frame: CGRect(x: 590, y: 0, width: 200, height: 200))
+        // Set color picker properties and hide inner components
+        backgroundColorPicker = ChromaColorPicker(frame: CGRect(x: 585, y: 0, width: 200, height: 200))
         backgroundColorPicker.delegate = self
         
         backgroundColorPicker.stroke = 3
         
-        backgroundColorPicker.adjustToColor(UIColor(rgb: 0x00f0b4))
-        
-        backgroundColorPicker.addTarget(self, action: #selector(updateWithDefaults), for: .editingDidEnd)
+        backgroundColorPicker.adjustToColor(UIColor.cyan)
         
         backgroundColorPicker.hexLabel.isHidden = true
-        backgroundColorPicker.shadeSlider.isHidden = true
+//        backgroundColorPicker.shadeSlider.isHidden = true
         backgroundColorPicker.addButton.isHidden = true
         backgroundColorPicker.handleLine.isHidden = true
+        
+        clockColorPicker = ChromaColorPicker(frame: CGRect(x: 585, y: 200, width: 200, height: 200))
+        clockColorPicker.delegate = self
+        
+        clockColorPicker.stroke = 3
+        
+        clockColorPicker.adjustToColor(UIColor.blue)
+        
+        clockColorPicker.hexLabel.isHidden = true
+//        clockColorPicker.shadeSlider.isHidden = true
+        clockColorPicker.addButton.isHidden = true
+        clockColorPicker.handleLine.isHidden = true
+        
+        handsColorPicker = ChromaColorPicker(frame: CGRect(x: 585, y: 400, width: 200, height: 200))
+        handsColorPicker.delegate = self
+        
+        handsColorPicker.stroke = 3
+        
+        handsColorPicker.adjustToColor(UIColor.purple)
+        
+        handsColorPicker.hexLabel.isHidden = true
+//        handsColorPicker.shadeSlider.isHidden = true
+        handsColorPicker.addButton.isHidden = true
+        handsColorPicker.handleLine.isHidden = true
+        
+        // Update colors upon release
+        backgroundColorPicker.addTarget(self, action: #selector(updateWithDefaults), for: .editingDidEnd)
+        clockColorPicker.addTarget(self, action: #selector(updateWithDefaults), for: .editingDidEnd)
+        handsColorPicker.addTarget(self, action: #selector(updateWithDefaults), for: .editingDidEnd)
 
         self.addSubview(backgroundColorPicker)
+        self.addSubview(clockColorPicker)
+        self.addSubview(handsColorPicker)
         
         // Initialise UILabels for ColorPickers
-        let backgroundColorPickerUILabel = UILabel(frame: CGRect(x: 640, y: 55, width: 100, height: 100))
+        let backgroundColorPickerUILabel = UILabel(frame: CGRect(x: 635, y: 50, width: 100, height: 100))
+        let clockColorPickerUILabel = UILabel(frame: CGRect(x: 635, y: 245, width: 100, height: 100))
+        let handsColorPickerUILabel = UILabel(frame: CGRect(x: 635, y: 445, width: 100, height: 100))
         
         backgroundColorPickerUILabel.text = "BACKGROUND\nCOLOR"
         backgroundColorPickerUILabel.textAlignment = .center
         backgroundColorPickerUILabel.font = getSoWhatFont(size: 25)
         backgroundColorPickerUILabel.numberOfLines = 0
         
+        clockColorPickerUILabel.text = "CLOCK\nCOLOR"
+        clockColorPickerUILabel.textAlignment = .center
+        clockColorPickerUILabel.font = getSoWhatFont(size: 25)
+        clockColorPickerUILabel.numberOfLines = 0
+        
+        handsColorPickerUILabel.text = "HANDS\nCOLOR"
+        handsColorPickerUILabel.textAlignment = .center
+        handsColorPickerUILabel.font = getSoWhatFont(size: 25)
+        handsColorPickerUILabel.numberOfLines = 0
+        
         self.addSubview(backgroundColorPickerUILabel)
+        self.addSubview(clockColorPickerUILabel)
+        self.addSubview(handsColorPickerUILabel)
         
         updateWithDefaults()
         
@@ -63,16 +108,14 @@ public class Clock: UIView  {
     
     @objc func updateWithDefaults() {
         update(
-            circleColor: UIColor(rgb: 0x0a97b7).cgColor,
-            handsColor: UIColor(rgb: 0x55cfd6).cgColor,
-            circleISColor: UIColor(rgb: 0xfceebf).cgColor,
+            circleISColor: UIColor(rgb: 0xf2ebd5).cgColor,
             words: self.words
         )
     }
     
-    func update(circleColor: CGColor, handsColor: CGColor, circleISColor: CGColor, words: [String]) {
+    func update(circleISColor: CGColor, words: [String]) {
         self.backgroundColor = backgroundColorPicker.currentColor
-        
+
         // We must first remove the already-existing layers from the pervious update() call and UILabels
         if self.layer.sublayers != nil {
             self.layer.sublayers!.forEach {
@@ -92,7 +135,7 @@ public class Clock: UIView  {
         }
         
         // Create the clock, which is a circle layer
-        let circ = getCircleLayer(x: 300, y: 300, r: 300, color: circleColor)
+        let circ = getCircleLayer(x: 300, y: 300, r: 300, color: clockColorPicker.currentColor.cgColor)
         circ.name = "clockCircle"
         circ.shadowOpacity = 0.4
         self.layer.addSublayer(circ)
@@ -115,7 +158,7 @@ public class Clock: UIView  {
         // Create layers and properties and add to view
         let hourLayer = CAShapeLayer()
         hourLayer.path = hourHand.cgPath
-        hourLayer.fillColor = handsColor
+        hourLayer.fillColor = handsColorPicker.currentColor.cgColor
         
         hourLayer.shadowOpacity = 0.3
         
@@ -125,7 +168,7 @@ public class Clock: UIView  {
         
         let minuteLayer = CAShapeLayer()
         minuteLayer.path = minuteHand.cgPath
-        minuteLayer.fillColor = handsColor
+        minuteLayer.fillColor = handsColorPicker.currentColor.cgColor
         
         minuteLayer.shadowOpacity = 0.3
         
