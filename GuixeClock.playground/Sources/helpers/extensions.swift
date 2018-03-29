@@ -35,7 +35,7 @@ extension Date {
 }
 
 extension Double {
-    func degrees() -> Double {
+    public func degrees() -> Double {
         return self * .pi / 180
     }
 }

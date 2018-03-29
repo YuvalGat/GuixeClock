@@ -14,6 +14,8 @@
  
  - Note:
  A lot of mathematics were applied on the Clock's hands in order to get them rotating properly. The formulas I used and the variable names are described in a PDF file I created using LaTeX and TikZ.
+ 
+ To get started, open the Assistant Editor.
  */
 
 import UIKit

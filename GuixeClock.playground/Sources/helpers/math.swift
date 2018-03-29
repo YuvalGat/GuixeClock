@@ -82,7 +82,7 @@ public func cosd(_ degrees: Double) -> Double {
     return __cospi(degrees / 180.0)
 }
 
-func mod(_ a: Int, _ n: Int) -> Int {
+public func mod(_ a: Int, _ n: Int) -> Int {
     let r = a % n
     return r >= 0 ? r : r + n
 }

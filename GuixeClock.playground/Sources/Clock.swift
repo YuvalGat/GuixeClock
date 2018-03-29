@@ -1,14 +1,11 @@
 import UIKit
 
 public class Clock: UIView  {
-    var bgColor: UIColor!
-    
     var words: [String]
     
     var backgroundColorPicker: ChromaColorPicker!
     
     public init() {
-        bgColor = UIColor(rgb: 0xb708ad)
         words = [
             "DESIRE",
             "LOVE",
@@ -24,8 +21,35 @@ public class Clock: UIView  {
             "IPHONE"
         ]
         
-        let frame = CGRect(x: 0, y: 0, width: 800, height: 700)
+        let frame = CGRect(x: 0, y: 0, width: 900, height: 700)
         super.init(frame: frame)
+        
+        // Set background-color picker properties and hide inner components
+        backgroundColorPicker = ChromaColorPicker(frame: CGRect(x: 590, y: 0, width: 200, height: 200))
+        backgroundColorPicker.delegate = self
+        
+        backgroundColorPicker.stroke = 3
+        
+        backgroundColorPicker.adjustToColor(UIColor(rgb: 0x00f0b4))
+        
+        backgroundColorPicker.addTarget(self, action: #selector(updateWithDefaults), for: .editingDidEnd)
+        
+        backgroundColorPicker.hexLabel.isHidden = true
+        backgroundColorPicker.shadeSlider.isHidden = true
+        backgroundColorPicker.addButton.isHidden = true
+        backgroundColorPicker.handleLine.isHidden = true
+
+        self.addSubview(backgroundColorPicker)
+        
+        // Initialise UILabels for ColorPickers
+        let backgroundColorPickerUILabel = UILabel(frame: CGRect(x: 640, y: 55, width: 100, height: 100))
+        
+        backgroundColorPickerUILabel.text = "BACKGROUND\nCOLOR"
+        backgroundColorPickerUILabel.textAlignment = .center
+        backgroundColorPickerUILabel.font = getSoWhatFont(size: 25)
+        backgroundColorPickerUILabel.numberOfLines = 0
+        
+        self.addSubview(backgroundColorPickerUILabel)
         
         updateWithDefaults()
         
@@ -35,27 +59,19 @@ public class Clock: UIView  {
         
         let timer = Timer(fireAt: closestMinute, interval: 60, target: self, selector: #selector(self.updateWithDefaults), userInfo: nil, repeats: true)
         RunLoop.main.add(timer, forMode: RunLoopMode.commonModes)
-        
-        backgroundColorPicker = ChromaColorPicker(frame: CGRect(x: 550, y: 0, width: 200, height: 200))
-        backgroundColorPicker.delegate = self
-        
-        backgroundColorPicker.padding = 10
-        backgroundColorPicker.stroke = 3
-        
-        self.addSubview(backgroundColorPicker)
     }
     
     @objc func updateWithDefaults() {
         update(
             circleColor: UIColor(rgb: 0x0a97b7).cgColor,
-               handsColor: UIColor(rgb: 0x55cfd6).cgColor,
-               circleISColor: UIColor(rgb: 0xfceebf).cgColor,
-               words: self.words
+            handsColor: UIColor(rgb: 0x55cfd6).cgColor,
+            circleISColor: UIColor(rgb: 0xfceebf).cgColor,
+            words: self.words
         )
     }
     
     func update(circleColor: CGColor, handsColor: CGColor, circleISColor: CGColor, words: [String]) {
-        self.backgroundColor = bgColor
+        self.backgroundColor = backgroundColorPicker.currentColor
         
         // We must first remove the already-existing layers from the pervious update() call and UILabels
         if self.layer.sublayers != nil {
@@ -78,6 +94,7 @@ public class Clock: UIView  {
         // Create the clock, which is a circle layer
         let circ = getCircleLayer(x: 300, y: 300, r: 300, color: circleColor)
         circ.name = "clockCircle"
+        circ.shadowOpacity = 0.4
         self.layer.addSublayer(circ)
         
         // Variables for arrow sizes; Described in the PDF file
@@ -129,7 +146,7 @@ public class Clock: UIView  {
         var secondWordIndex: Int
         secondWordIndex = currentMinuteForSentence <= 30 ? currentHourForSentence : currentHourForSentence + 1
         secondWordIndex = mod(secondWordIndex, 12)
-
+        
         let firstWord = words[firstWordIndex]
         let secondWord = words[secondWordIndex]
         
@@ -176,7 +193,6 @@ public class Clock: UIView  {
 
 extension Clock: ChromaColorPickerDelegate {
     public func colorPickerDidChooseColor(_ colorPicker: ChromaColorPicker, color: UIColor) {
-        self.bgColor = color
         updateWithDefaults()
     }
 }
