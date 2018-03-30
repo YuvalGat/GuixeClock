@@ -1,6 +1,6 @@
 import UIKit
 
-public class Clock: UIView  {
+public class Clock: UIView, UIPickerViewDelegate  {
     var words: [String]
     
     var backgroundColorPicker: ChromaColorPicker!
@@ -23,99 +23,81 @@ public class Clock: UIView  {
             "IPHONE"
         ]
         
-        let frame = CGRect(x: 0, y: 0, width: 900, height: 700)
+        let frame = CGRect(x: 0, y: 0, width: 900, height: 950)
         super.init(frame: frame)
         
-        // Set color picker properties and hide inner components
+        // Initialise pickers and adjust to default colour
         backgroundColorPicker = ChromaColorPicker(frame: CGRect(x: 585, y: 0, width: 200, height: 200))
-        backgroundColorPicker.delegate = self
-        
-        backgroundColorPicker.stroke = 3
-        
         backgroundColorPicker.adjustToColor(UIColor.cyan)
         
-        backgroundColorPicker.hexLabel.isHidden = true
-//        backgroundColorPicker.shadeSlider.isHidden = true
-        backgroundColorPicker.addButton.isHidden = true
-        backgroundColorPicker.handleLine.isHidden = true
-        
         clockColorPicker = ChromaColorPicker(frame: CGRect(x: 585, y: 200, width: 200, height: 200))
-        clockColorPicker.delegate = self
-        
-        clockColorPicker.stroke = 3
-        
         clockColorPicker.adjustToColor(UIColor.blue)
         
-        clockColorPicker.hexLabel.isHidden = true
-//        clockColorPicker.shadeSlider.isHidden = true
-        clockColorPicker.addButton.isHidden = true
-        clockColorPicker.handleLine.isHidden = true
-        
         handsColorPicker = ChromaColorPicker(frame: CGRect(x: 585, y: 400, width: 200, height: 200))
-        handsColorPicker.delegate = self
-        
-        handsColorPicker.stroke = 3
-        
         handsColorPicker.adjustToColor(UIColor.purple)
         
-        handsColorPicker.hexLabel.isHidden = true
-//        handsColorPicker.shadeSlider.isHidden = true
-        handsColorPicker.addButton.isHidden = true
-        handsColorPicker.handleLine.isHidden = true
-        
-        // Update colors upon release
-        backgroundColorPicker.addTarget(self, action: #selector(updateWithDefaults), for: .editingDidEnd)
-        clockColorPicker.addTarget(self, action: #selector(updateWithDefaults), for: .editingDidEnd)
-        handsColorPicker.addTarget(self, action: #selector(updateWithDefaults), for: .editingDidEnd)
-
-        self.addSubview(backgroundColorPicker)
-        self.addSubview(clockColorPicker)
-        self.addSubview(handsColorPicker)
+        // Set stroke, delegate and hide unnecessary components. Then, update UI when finish choosing colour and add to subview
+        [backgroundColorPicker, clockColorPicker, handsColorPicker].forEach {
+            $0!.stroke = 3
+            $0!.delegate = self
+            
+            $0!.hexLabel.isHidden = true
+            $0!.addButton.isHidden = true
+            $0!.handleLine.isHidden = true
+            
+            $0!.addTarget(self, action: #selector(self.update), for: .editingDidEnd)
+            self.addSubview($0!)
+        }
         
         // Initialise UILabels for ColorPickers
-        let backgroundColorPickerUILabel = UILabel(frame: CGRect(x: 635, y: 50, width: 100, height: 100))
+        let backgroundColorPickerUILabel = UILabel(frame: CGRect(x: 635, y: 45, width: 100, height: 100))
         let clockColorPickerUILabel = UILabel(frame: CGRect(x: 635, y: 245, width: 100, height: 100))
         let handsColorPickerUILabel = UILabel(frame: CGRect(x: 635, y: 445, width: 100, height: 100))
         
         backgroundColorPickerUILabel.text = "BACKGROUND\nCOLOR"
-        backgroundColorPickerUILabel.textAlignment = .center
-        backgroundColorPickerUILabel.font = getSoWhatFont(size: 25)
-        backgroundColorPickerUILabel.numberOfLines = 0
-        
         clockColorPickerUILabel.text = "CLOCK\nCOLOR"
-        clockColorPickerUILabel.textAlignment = .center
-        clockColorPickerUILabel.font = getSoWhatFont(size: 25)
-        clockColorPickerUILabel.numberOfLines = 0
-        
         handsColorPickerUILabel.text = "HANDS\nCOLOR"
-        handsColorPickerUILabel.textAlignment = .center
-        handsColorPickerUILabel.font = getSoWhatFont(size: 25)
-        handsColorPickerUILabel.numberOfLines = 0
         
-        self.addSubview(backgroundColorPickerUILabel)
-        self.addSubview(clockColorPickerUILabel)
-        self.addSubview(handsColorPickerUILabel)
+        [backgroundColorPickerUILabel, clockColorPickerUILabel, handsColorPickerUILabel].forEach {
+            $0.textAlignment = .center
+            $0.font = getSoWhatFont(size: 25)
+            $0.numberOfLines = 0
+            self.addSubview($0)
+        }
         
-        updateWithDefaults()
+        update()
         
         // Get closest minute, at which we start a timer which updates the UIView every minute, so that the clock functions like a normal
         // This way, the clock is precise.
         let closestMinute = getClosestRoundMinute()
         
-        let timer = Timer(fireAt: closestMinute, interval: 60, target: self, selector: #selector(self.updateWithDefaults), userInfo: nil, repeats: true)
+        let timer = Timer(fireAt: closestMinute, interval: 60, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
         RunLoop.main.add(timer, forMode: RunLoopMode.commonModes)
     }
     
-    @objc func updateWithDefaults() {
-        update(
-            circleISColor: UIColor(rgb: 0xf2ebd5).cgColor,
-            words: self.words
-        )
+    // Changes a word when the sender, of type UIButton, is clicked
+    @objc func changeWord(sender: UIButton) {
+        // Create the alert and add a text field to it
+        let alert = UIAlertController(title: "Enter a new word to replace \((sender.titleLabel?.text ?? "").lowercased()) with", message: "", preferredStyle: .alert)
+        
+        alert.addTextField { (textField) in
+            textField.placeholder = "Enter your word here!"
+        }
+        
+        // When Done is pressed, get the value of the text field and put it in the words array, then update.
+        alert.addAction(UIAlertAction(title: "Done", style: .default, handler: { [weak alert] (_) in
+            let textField = alert!.textFields![0]
+            textField.autocorrectionType = .no // Makes it so no keyboard tips are shown
+            self.words[sender.tag] = textField.text!.uppercased()
+            self.update()
+        }))
+        
+        alert.presentInOwnWindow(animated: true, completion: nil)
     }
     
-    func update(circleISColor: CGColor, words: [String]) {
+    @objc func update() {
         self.backgroundColor = backgroundColorPicker.currentColor
-
+        
         // We must first remove the already-existing layers from the pervious update() call and UILabels
         if self.layer.sublayers != nil {
             self.layer.sublayers!.forEach {
@@ -201,7 +183,7 @@ public class Clock: UIView  {
         self.addSubview(sentence)
         
         // Add the circle behind the word "IS"
-        let circleBehindIS = getCircleLayer(x: 300, y: 300, r: 50, color: circleISColor)
+        let circleBehindIS = getCircleLayer(x: 300, y: 300, r: 50, color: UIColor(rgb: 0xf2ebd5).cgColor)
         circleBehindIS.shadowOpacity = 0.3
         self.layer.addSublayer(circleBehindIS)
         
@@ -219,11 +201,16 @@ public class Clock: UIView  {
         // Initialise the buttons with the corresponding words
         for hr in 1...12 {
             let coords: CGPoint = getCoordinatesOfLabelByHour(hr: hr)
-            let button = UIButton(frame: CGRect(x: coords.x - 50, y: coords.y - 25, width: 100, height: 50))
+            let button = UIButton(frame: CGRect(x: coords.x - 25, y: coords.y - 25, width: 100, height: 50))
             
             button.setTitle(words[hr - 1], for: .normal)
             button.setTitleColor(.black, for: .normal)
             button.titleLabel?.font = getSoWhatFont(size: 30)
+            button.sizeToFit()
+            
+            button.tag = hr - 1
+            
+            button.addTarget(self, action: #selector(changeWord), for: .touchUpInside)
             
             self.addSubview(button)
         }
@@ -236,6 +223,6 @@ public class Clock: UIView  {
 
 extension Clock: ChromaColorPickerDelegate {
     public func colorPickerDidChooseColor(_ colorPicker: ChromaColorPicker, color: UIColor) {
-        updateWithDefaults()
+        update()
     }
 }

@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 
+// Initialise a UIColor with hex
 public extension UIColor {
     convenience init(red: Int, green: Int, blue: Int) {
         assert(red >= 0 && red <= 255, "Invalid red component")
@@ -19,6 +20,7 @@ public extension UIColor {
     }
 }
 
+// Set date by hour, minute, second and time zone
 extension Date {
     public func setTime(hour: Int, min: Int, sec: Int, timeZoneAbbrev: String = "UTC") -> Date? {
         let x: Set<Calendar.Component> = [.year, .month, .day, .hour, .minute, .second]
@@ -34,6 +36,18 @@ extension Date {
     }
 }
 
+// Show alert in UIView. Can't use .present() because context isn't UIViewController
+extension UIAlertController {
+    func presentInOwnWindow(animated: Bool, completion: (() -> Void)?) {
+        let alertWindow = UIWindow(frame: UIScreen.main.bounds)
+        alertWindow.rootViewController = UIViewController()
+        alertWindow.windowLevel = UIWindowLevelAlert + 1;
+        alertWindow.makeKeyAndVisible()
+        alertWindow.rootViewController?.present(self, animated: animated, completion: completion)
+    }
+}
+
+// Radians to degrees
 extension Double {
     public func degrees() -> Double {
         return self * .pi / 180

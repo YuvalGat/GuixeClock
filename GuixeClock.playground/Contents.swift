@@ -8,12 +8,16 @@
  
  This playground lets you create and customise your own Guixé clock, allowing you to pick colours for the hands, background and clock itself, and change the words which appear on it.
  
- Customising the clock is very easy: In order to change a word, simply click it to pick another word. If you want to change the colours, simply choose a colour from the right.
+ Customising the clock is very easy: In order to change a word, simply click it to enter a new one. If you want to change the colours, simply choose a colour from the right.
  
  The generated sentence will appear below the clock itself.
  
  - Note:
+ As the frame is rather large (900x950), it is highly recommended to run this playground on a large monitor, and not a small Macbook/Macbook Air/Macbook Pro.
+ 
+ ```
  A lot of mathematics were applied on the Clock's hands in order to get them rotating properly. The formulas I used and the variable names are described in a PDF file I created using LaTeX and TikZ.
+ ```
  
  To get started, open the Assistant Editor.
  */

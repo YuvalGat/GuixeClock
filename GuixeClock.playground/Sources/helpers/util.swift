@@ -16,8 +16,8 @@ public func getCircleLayer(x: Int, y: Int, r: Int, color: CGColor) -> CAShapeLay
 public func getCoordinatesOfLabelByHour(hr: Int) -> CGPoint {
     let theta = Double(mod(30 * hr - 90, 360))
     return CGPoint(
-        x: 270 * cosd(theta) + 300,
-        y: 270 * sind(theta) + 300
+        x: 265 * cosd(theta) + 300,
+        y: 265 * sind(theta) + 300
     )
 }
 
