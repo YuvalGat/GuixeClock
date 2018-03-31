@@ -122,7 +122,7 @@ public class Clock: UIView, UIPickerViewDelegate  {
         circ.shadowOpacity = 0.4
         self.layer.addSublayer(circ)
         
-        // Variables for arrow sizes; Described in the PDF file
+        // Variables for arrow sizes; Described in the PDF file under Sources/main.pdf
         let h = 15.0
         let l1 = 170.0
         let d = 25.0

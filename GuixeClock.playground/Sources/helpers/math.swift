@@ -3,7 +3,7 @@ import UIKit
 
 /*:
  - Note:
- A lot of mathematics were applied here. The general formula for rotating (x, y) around (0, 0) by angle θ is shown in the PDF file. θ is calculated for the minutes hand and for the hours hand, after which we apply the formulas for each of the arrow's coordinates.
+ A lot of mathematics were applied here. The general formula for rotating (x, y) around (0, 0) by angle θ is shown in the PDF file under Sources/main.pdf. θ is calculated for the minutes hand and for the hours hand, after which we apply the formulas for each of the arrow's coordinates.
  
  The variables h, l1, d, k1, l2, k2 are also described in the PDF file.
  
