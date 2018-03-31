@@ -67,8 +67,8 @@ public class Clock: UIView, UIPickerViewDelegate  {
         
         update()
         
-        // Get closest minute, at which we start a timer which updates the UIView every minute, so that the clock functions like a normal
-        // This way, the clock is precise.
+        // Get closest minute, at which we start a timer which updates the UIView every minute, so that the clock functions as expected from a clock.
+        // This way, the clock is precisely identical to the computer's clock.
         let closestMinute = getClosestRoundMinute()
         
         let timer = Timer(fireAt: closestMinute, interval: 60, target: self, selector: #selector(self.update), userInfo: nil, repeats: true)
@@ -109,7 +109,7 @@ public class Clock: UIView, UIPickerViewDelegate  {
             }
         }
         
-        // Remove the generated sentence so it can be regenerated
+        // Remove the generated sentence so it can be regenerated. We also remove the label for the word "IS", so that we don't generate another one on top of the already existing one.
         self.subviews.forEach {
             if [99, 199].contains($0.tag) {
                 $0.removeFromSuperview()
@@ -139,23 +139,21 @@ public class Clock: UIView, UIPickerViewDelegate  {
         
         // Create layers and properties and add to view
         let hourLayer = CAShapeLayer()
-        hourLayer.path = hourHand.cgPath
-        hourLayer.fillColor = handsColorPicker.currentColor.cgColor
-        
-        hourLayer.shadowOpacity = 0.3
-        
-        hourLayer.name = "hourHand"
-        
-        self.layer.addSublayer(hourLayer)
-        
         let minuteLayer = CAShapeLayer()
+
+        hourLayer.path = hourHand.cgPath
         minuteLayer.path = minuteHand.cgPath
+
+        hourLayer.fillColor = handsColorPicker.currentColor.cgColor
         minuteLayer.fillColor = handsColorPicker.currentColor.cgColor
-        
+
+        hourLayer.shadowOpacity = 0.3
         minuteLayer.shadowOpacity = 0.3
         
+        hourLayer.name = "hourHand"
         minuteLayer.name = "minuteHand"
         
+        self.layer.addSublayer(hourLayer)
         self.layer.addSublayer(minuteLayer)
         
         // Create the sentence
@@ -170,7 +168,7 @@ public class Clock: UIView, UIPickerViewDelegate  {
         // The hour hand word is dependent on whether or not the minute is more than 30
         var secondWordIndex: Int
         secondWordIndex = currentMinuteForSentence <= 30 ? currentHourForSentence : currentHourForSentence + 1
-        secondWordIndex = mod(secondWordIndex, 12)
+        secondWordIndex = mod(secondWordIndex, 12) // Make sure the index is within range
         
         let firstWord = words[firstWordIndex]
         let secondWord = words[secondWordIndex]
@@ -198,7 +196,7 @@ public class Clock: UIView, UIPickerViewDelegate  {
         
         self.addSubview(labelForIS)
         
-        // Initialise the buttons with the corresponding words
+        // Initialise the buttons with the corresponding words and add the target upon click
         for hr in 1...12 {
             let coords: CGPoint = getCoordinatesOfLabelByHour(hr: hr)
             let button = UIButton(frame: CGRect(x: coords.x - 25, y: coords.y - 25, width: 100, height: 50))
@@ -221,6 +219,7 @@ public class Clock: UIView, UIPickerViewDelegate  {
     }
 }
 
+// Clock must conform to the ChromaColorPickerDelegate delegate. When a color is picked, we update the screen.
 extension Clock: ChromaColorPickerDelegate {
     public func colorPickerDidChooseColor(_ colorPicker: ChromaColorPicker, color: UIColor) {
         update()

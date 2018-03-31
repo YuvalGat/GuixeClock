@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 
+// Returns current hour/minute
 public func getCurrentHour() -> Double {
     return Double(Calendar.current.component(.hour, from: Date()))
 }

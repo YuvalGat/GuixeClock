@@ -1,6 +1,7 @@
 import Foundation
 import UIKit
 
+// Create the UIBezierPath for the hands. In order to make things clear, I've used a dictionary with names corresponding to each coordinate. I could've also used an array, but that would be counter-intuitive.
 public func createHourHandPath(hr: Double, min: Double, h: Double, l1: Double, d: Double, k1: Double) -> UIBezierPath {
     let hourHand: UIBezierPath = UIBezierPath()
     let hourArrow = getFrontArrowCoordinatesByTime(hr: hr, min: min, h: h, l1: l1, d: d, k1: k1)

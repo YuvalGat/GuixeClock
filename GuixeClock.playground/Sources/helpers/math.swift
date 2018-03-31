@@ -7,7 +7,7 @@ import UIKit
  
  The variables h, l1, d, k1, l2, k2 are also described in the PDF file.
  
- I've decided to use a Dictionary instead of an array for readability reasons.
+ Even though I coulf have returned an array, I decided to use a dictionary to make sure each variable name is clear.
  
  The PDF File was generated with LaTeX using TikZ.
  */

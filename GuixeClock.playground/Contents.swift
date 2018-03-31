@@ -2,7 +2,7 @@
  # Guixé Clock
  This playground was inspired by the [Guixé Clock](http://www.guixe.com/products/ALESSI/Wall_Clocks.html) created by Martí Guixé.
  
- The idea of this clock is to generate sentences: The clock's hands are arrows, and if you follow the back of the arrow to its front, you'll get a sentence (i.e. Desire is Design).
+ The idea of this clock is to generate sentences: The clock's hands form an arrow, and if you follow the back of the arrow to its front, you'll get a sentence (i.e. Food is Desire).
  
  The original clock isn't very interactive: You can't change the words on the clock or the colours of it.
  
@@ -13,13 +13,10 @@
  The generated sentence will appear below the clock itself.
  
  - Note:
- As the frame is rather large (900x950), it is highly recommended to run this playground on a large monitor, and not a small Macbook/Macbook Air/Macbook Pro.
+ In order to get the coordinates of the arrow based on time and other variables (such as lengths of specific parts of the arrow), I had to use a lot of mathematics. For your convenience, I made a PDF file with the corresponding variables and equations using LaTeX and TikZ. It can be found
  
- ```
- A lot of mathematics were applied on the Clock's hands in order to get them rotating properly. The formulas I used and the variable names are described in a PDF file I created using LaTeX and TikZ.
- ```
- 
- To get started, open the Assistant Editor.
+ To get started, open the Assistant Editor and drag the view divider to the left, until you see the whole frame.
+ If you are using a MacBook with a small display, make sure you scroll down to see the entirety of the frame (if you use two fingers to scroll, make sure you don't scroll inside the frame but in the grey area around it).
  */
 
 import UIKit
