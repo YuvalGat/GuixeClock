@@ -17,7 +17,7 @@ public func getClosestRoundMinute() -> Date {
     let currentHour: Int = Calendar.current.component(.hour, from: Date())
     let currentMinute: Int = Calendar.current.component(.minute, from: Date())
     
-    let inOneMinute = Date().setTime(hour: currentHour, min: currentMinute + 1, sec: 0, timeZoneAbbrev: localTimeZoneAbbreviation)
+    let inOneMinute: Date! = Date().setTime(hour: currentHour, min: currentMinute + 1, sec: 0, timeZoneAbbrev: localTimeZoneAbbreviation)
     
     return inOneMinute!
 }

@@ -12,32 +12,32 @@ import UIKit
  The PDF File was generated with LaTeX using TikZ.
  */
 
-let xOffset = 384.0
-let yOffset = 300.0
+let xOffset: Double = 384.0
+let yOffset: Double = 300.0
 
 public func getFrontArrowCoordinatesByTime(hr: Double, min: Double, h: Double, l1: Double, d: Double, k1: Double) -> [String: CGPoint] {
     let hrTheta: Double = Double(mod(Int(round(hr * 30 + min / 2)), 360))
     
-    let arrowFrontBackTopX = -h * cosd(hrTheta) + xOffset
-    let arrowFrontBackTopY = -h * sind(hrTheta) + yOffset
+    let arrowFrontBackTopX: Double = -h * cosd(hrTheta) + xOffset
+    let arrowFrontBackTopY: Double = -h * sind(hrTheta) + yOffset
     
-    let arrowFrontBackBottomX = h * cosd(hrTheta) + xOffset
-    let arrowFrontBackBottomY = h * sind(hrTheta) + yOffset
+    let arrowFrontBackBottomX: Double = h * cosd(hrTheta) + xOffset
+    let arrowFrontBackBottomY: Double = h * sind(hrTheta) + yOffset
     
-    let arrowFrontMiddleBottomX = -l1 * cosd(hrTheta + 90) + h * sind(hrTheta + 90) + xOffset
-    let arrowFrontMiddleBottomY = -l1 * sind(hrTheta + 90) - h * cosd(hrTheta + 90) + yOffset
+    let arrowFrontMiddleBottomX: Double = -l1 * cosd(hrTheta + 90) + h * sind(hrTheta + 90) + xOffset
+    let arrowFrontMiddleBottomY: Double = -l1 * sind(hrTheta + 90) - h * cosd(hrTheta + 90) + yOffset
     
-    let arrowFrontMiddleBottomBottomX = l1 * cosd(hrTheta - 90) - (h + d) * sind(hrTheta - 90) + xOffset
-    let arrowFrontMiddleBottomBottomY = l1 * sind(hrTheta - 90) + (h + d) * cosd(hrTheta - 90) + yOffset
+    let arrowFrontMiddleBottomBottomX: Double = l1 * cosd(hrTheta - 90) - (h + d) * sind(hrTheta - 90) + xOffset
+    let arrowFrontMiddleBottomBottomY: Double = l1 * sind(hrTheta - 90) + (h + d) * cosd(hrTheta - 90) + yOffset
     
-    let arrowFrontPointyX = (l1 + k1) * cosd(hrTheta - 90) + xOffset
-    let arrowFrontPointyY = (l1 + k1) * sind(hrTheta - 90) + yOffset
+    let arrowFrontPointyX: Double = (l1 + k1) * cosd(hrTheta - 90) + xOffset
+    let arrowFrontPointyY: Double = (l1 + k1) * sind(hrTheta - 90) + yOffset
     
-    let arrowFrontMiddleTopTopX = l1 * cosd(hrTheta - 90) - (-h - d) * sind(hrTheta - 90) + xOffset
-    let arrowFrontMiddleTopTopY = l1 * sind(hrTheta - 90) + (-h - d) * cosd(hrTheta - 90) + yOffset
+    let arrowFrontMiddleTopTopX: Double = l1 * cosd(hrTheta - 90) - (-h - d) * sind(hrTheta - 90) + xOffset
+    let arrowFrontMiddleTopTopY: Double = l1 * sind(hrTheta - 90) + (-h - d) * cosd(hrTheta - 90) + yOffset
     
-    let arrowFrontMiddleTopX = -l1 * cosd(hrTheta + 90) - h * sind(hrTheta + 90) + xOffset
-    let arrowFrontMiddleTopY = -l1 * sind(hrTheta + 90) + h * cosd(hrTheta + 90) + yOffset
+    let arrowFrontMiddleTopX: Double = -l1 * cosd(hrTheta + 90) - h * sind(hrTheta + 90) + xOffset
+    let arrowFrontMiddleTopY: Double = -l1 * sind(hrTheta + 90) + h * cosd(hrTheta + 90) + yOffset
     
     return [
         "backTop": CGPoint(x: arrowFrontBackTopX, y: arrowFrontBackTopY),
@@ -51,22 +51,22 @@ public func getFrontArrowCoordinatesByTime(hr: Double, min: Double, h: Double, l
 }
 
 public func getBackArrowCoordinatesByTime(min: Double, h: Double, l2: Double, k2: Double) -> [String: CGPoint] {
-    let minTheta = (min * 6 + 180).truncatingRemainder(dividingBy: 360)
+    let minTheta: Double = Double(mod(Int(min * 6 + 180), 360))
     
-    let arrowBackBackTopX = -h * cosd(minTheta) + xOffset
-    let arrowBackBackTopY = -h * sind(minTheta) + yOffset
+    let arrowBackBackTopX: Double = -h * cosd(minTheta) + xOffset
+    let arrowBackBackTopY: Double = -h * sind(minTheta) + yOffset
     
-    let arrowBackUpperX = -h * cosd(minTheta) - l2 * sind(minTheta) + xOffset
-    let arrowBackUpperY = -h * sind(minTheta) + l2 * cosd(minTheta) + yOffset
+    let arrowBackUpperX: Double = -h * cosd(minTheta) - l2 * sind(minTheta) + xOffset
+    let arrowBackUpperY: Double = -h * sind(minTheta) + l2 * cosd(minTheta) + yOffset
     
-    let arrowBackInnerX = -(l2 - k2) * sind(minTheta) + xOffset
-    let arrowBackInnerY = (l2 - k2) * cosd(minTheta) + yOffset
+    let arrowBackInnerX: Double = -(l2 - k2) * sind(minTheta) + xOffset
+    let arrowBackInnerY: Double = (l2 - k2) * cosd(minTheta) + yOffset
     
-    let arrowBackLowerX = h * cosd(minTheta) - l2 * sind(minTheta) + xOffset
-    let arrowBackLowerY = h * sind(minTheta) + l2 * cosd(minTheta) + yOffset
+    let arrowBackLowerX: Double = h * cosd(minTheta) - l2 * sind(minTheta) + xOffset
+    let arrowBackLowerY: Double = h * sind(minTheta) + l2 * cosd(minTheta) + yOffset
     
-    let arrowBackBackBottomX = h * cosd(minTheta) + xOffset
-    let arrowBackBackBottomY = h * sind(minTheta) + yOffset
+    let arrowBackBackBottomX: Double = h * cosd(minTheta) + xOffset
+    let arrowBackBackBottomY: Double = h * sind(minTheta) + yOffset
     
     return [
         "backTop": CGPoint(x: arrowBackBackTopX, y: arrowBackBackTopY),
@@ -86,7 +86,7 @@ public func cosd(_ degrees: Double) -> Double {
 }
 
 public func mod(_ a: Int, _ n: Int) -> Int {
-    let r = a % n
+    let r: Int = a % n
     return r >= 0 ? r : r + n
 }
 

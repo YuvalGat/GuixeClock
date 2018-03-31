@@ -8,7 +8,7 @@
  
  This playground lets you create and customise your own Guixé clock, allowing you to pick colours for the hands, background and clock itself, and change the words which appear on it.
  
- Customising the clock is very easy: In order to change a word, simply click it to enter a new one. If you want to change the colours, simply choose a colour from the right.
+ Customising the clock is very easy: In order to change a word, simply click it to enter a new one. If you want to change the colours, simply choose a colour from the bottom. Notice the small button above the color pickers; it lets you choose the saturation (grey colors).
  
  The generated sentence will appear below the clock itself.
  
@@ -22,7 +22,5 @@
 import UIKit
 import PlaygroundSupport
 
-let clock = Clock()
-
-PlaygroundPage.current.liveView = clock
+PlaygroundPage.current.liveView = Clock()
 

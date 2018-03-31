@@ -24,8 +24,8 @@ public extension UIColor {
 extension Date {
     public func setTime(hour: Int, min: Int, sec: Int, timeZoneAbbrev: String = "UTC") -> Date? {
         let x: Set<Calendar.Component> = [.year, .month, .day, .hour, .minute, .second]
-        let cal = Calendar.current
-        var components = cal.dateComponents(x, from: self)
+        let cal: Calendar = Calendar.current
+        var components: DateComponents = cal.dateComponents(x, from: self)
         
         components.timeZone = TimeZone(abbreviation: timeZoneAbbrev)
         components.hour = hour
@@ -39,7 +39,7 @@ extension Date {
 // Show alert in UIView. Can't use .present() because context isn't UIViewController
 extension UIAlertController {
     func presentInOwnWindow(animated: Bool, completion: (() -> Void)?) {
-        let alertWindow = UIWindow(frame: UIScreen.main.bounds)
+        let alertWindow: UIWindow = UIWindow(frame: UIScreen.main.bounds)
         alertWindow.rootViewController = UIViewController()
         alertWindow.windowLevel = UIWindowLevelAlert + 1;
         alertWindow.makeKeyAndVisible()
