@@ -1,15 +1,18 @@
 # Guixé Clock
 This playground was inspired by the [Guixé Clock](http://www.guixe.com/products/ALESSI/Wall_Clocks.html) created by Martí Guixé.
 
-The idea of this clock is to generate sentences: The clock's hands are arrows, and if you follow the back of the arrow to its front, you'll get a sentence (i.e. Desire is Design).
+The idea of this clock is to generate sentences: The clock's hands form an arrow , and if you follow the back of the arrow (minutes hand) to its front (hours hand), you'll get a sentence (i.e. Food is Desire). Notice how the word "is" is in the middle of the clock so that the sentences make sense.
 
 The original clock isn't very interactive: You can't change the words on the clock or the colours of it.
 
 This playground lets you create and customise your own Guixé clock, allowing you to pick colours for the hands, background and clock itself, and change the words which appear on it.
 
-Customising the clock is very easy: In order to change a word, simply click it to pick another word. If you want to change the colours, simply choose a colour from the right.
+Customising the clock is very easy: In order to change a word, simply click it to enter a new one. If you want to change the colours, simply choose a colour from the bottom. Notice the small button above the color pickers; it lets you choose the saturation (grey colors).
 
 The generated sentence will appear below the clock itself.
 
 - Note:
-A lot of mathematics were applied on the Clock's hands in order to get them rotating properly. The formulas I used and the variable names are described in a PDF file I created using LaTeX and TikZ.
+In order to get the coordinates of the arrow based on time and other variables (such as lengths of specific parts of the arrow), I had to use a lot of mathematics. For your convenience, I made a PDF file with the corresponding variables and equations using LaTeX and TikZ. It can be found under /Sources/main.pdf.
+
+To get started, clone this repository, open the Assistant Editor and drag the view divider to the left, until you see the whole frame.
+If you are using a MacBook with a small display, make sure you scroll down to see the entirety of the frame (if you use two fingers to scroll, make sure you don't scroll inside the frame but in the grey area around it).

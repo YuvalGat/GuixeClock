@@ -147,7 +147,7 @@ public class Clock: UIView, UIPickerViewDelegate  {
         let hourHand: UIBezierPath = createHourHandPath(hr: hr, min: min, h: h, l1: l1, d: d, k1: k1)
         let minuteHand: UIBezierPath = createMinuteHandPath(min: min, h: h, l2: l2, k2: k2)
         
-        // Create layers and properties and add to view
+        // Create layers, set properties and add to view
         let hourLayer: CAShapeLayer = CAShapeLayer()
         let minuteLayer: CAShapeLayer = CAShapeLayer()
 
