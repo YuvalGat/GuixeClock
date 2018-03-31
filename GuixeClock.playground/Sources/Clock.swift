@@ -9,18 +9,18 @@ public class Clock: UIView, UIPickerViewDelegate  {
     
     public init() {
         words = [
+            "WORK",
+            "BELIEF",
             "DESIRE",
-            "LOVE",
-            "JOY",
-            "MOUSE",
-            "BAG",
-            "FOOD",
-            "TABLE",
-            "CUP",
+            "DESIGN",
+            "EMOTION",
+            "TECH",
             "APPLE",
-            "HAT",
-            "CHARGER",
-            "IPHONE"
+            "FOOD",
+            "LIFE",
+            "CONFLICT",
+            "LOVE",
+            "DREAM"
         ]
         
         let frame = CGRect(x: 0, y: 0, width: 900, height: 950)
@@ -205,6 +205,7 @@ public class Clock: UIView, UIPickerViewDelegate  {
             button.setTitleColor(.black, for: .normal)
             button.titleLabel?.font = getSoWhatFont(size: 30)
             button.sizeToFit()
+            button.titleLabel!.textAlignment = .center
             
             button.tag = hr - 1
             
