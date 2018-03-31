@@ -23,23 +23,24 @@ public class Clock: UIView, UIPickerViewDelegate  {
             "DREAM"
         ]
         
-        let frame = CGRect(x: 0, y: 0, width: 900, height: 950)
+        let frame = CGRect(x: 0, y: 0, width: 768, height: 950)
         super.init(frame: frame)
         
         // Initialise pickers and adjust to default colour
-        backgroundColorPicker = ChromaColorPicker(frame: CGRect(x: 585, y: 0, width: 200, height: 200))
+        backgroundColorPicker = ChromaColorPicker(frame: CGRect(x: 27, y: 700, width: 238, height: 238))
         backgroundColorPicker.adjustToColor(UIColor.cyan)
         
-        clockColorPicker = ChromaColorPicker(frame: CGRect(x: 585, y: 200, width: 200, height: 200))
+        clockColorPicker = ChromaColorPicker(frame: CGRect(x: 265, y: 700, width: 238, height: 238))
         clockColorPicker.adjustToColor(UIColor.blue)
         
-        handsColorPicker = ChromaColorPicker(frame: CGRect(x: 585, y: 400, width: 200, height: 200))
+        handsColorPicker = ChromaColorPicker(frame: CGRect(x: 503, y: 700, width: 238, height: 238))
         handsColorPicker.adjustToColor(UIColor.purple)
         
         // Set stroke, delegate and hide unnecessary components. Then, update UI when finish choosing colour and add to subview
         [backgroundColorPicker, clockColorPicker, handsColorPicker].forEach {
             $0!.stroke = 3
             $0!.delegate = self
+            $0!.supportsShadesOfGray = true
             
             $0!.hexLabel.isHidden = true
             $0!.addButton.isHidden = true
@@ -50,9 +51,9 @@ public class Clock: UIView, UIPickerViewDelegate  {
         }
         
         // Initialise UILabels for ColorPickers
-        let backgroundColorPickerUILabel = UILabel(frame: CGRect(x: 635, y: 45, width: 100, height: 100))
-        let clockColorPickerUILabel = UILabel(frame: CGRect(x: 635, y: 245, width: 100, height: 100))
-        let handsColorPickerUILabel = UILabel(frame: CGRect(x: 635, y: 445, width: 100, height: 100))
+        let backgroundColorPickerUILabel = UILabel(frame: CGRect(x: 93, y: 770, width: 100, height: 100))
+        let clockColorPickerUILabel = UILabel(frame: CGRect(x: 331, y: 770, width: 100, height: 100))
+        let handsColorPickerUILabel = UILabel(frame: CGRect(x: 569, y: 770, width: 100, height: 100))
         
         backgroundColorPickerUILabel.text = "BACKGROUND\nCOLOR"
         clockColorPickerUILabel.text = "CLOCK\nCOLOR"
@@ -78,7 +79,7 @@ public class Clock: UIView, UIPickerViewDelegate  {
     // Changes a word when the sender, of type UIButton, is clicked
     @objc func changeWord(sender: UIButton) {
         // Create the alert and add a text field to it
-        let alert = UIAlertController(title: "Enter a new word to replace \((sender.titleLabel?.text ?? "").lowercased()) with", message: "", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Enter a new word to replace \"\((sender.titleLabel?.text ?? "").lowercased())\" with", message: "", preferredStyle: .alert)
         
         alert.addTextField { (textField) in
             textField.placeholder = "Enter your word here!"
@@ -96,6 +97,7 @@ public class Clock: UIView, UIPickerViewDelegate  {
     }
     
     @objc func update() {
+        // Update background color according to color picker
         self.backgroundColor = backgroundColorPicker.currentColor
         
         // We must first remove the already-existing layers from the pervious update() call and UILabels
@@ -117,9 +119,10 @@ public class Clock: UIView, UIPickerViewDelegate  {
         }
         
         // Create the clock, which is a circle layer
-        let circ = getCircleLayer(x: 300, y: 300, r: 300, color: clockColorPicker.currentColor.cgColor)
+        let circ = getCircleLayer(x: 384, y: 300, r: 300, color: clockColorPicker.currentColor.cgColor)
         circ.name = "clockCircle"
-        circ.shadowOpacity = 0.4
+        circ.shadowOpacity = 1
+        circ.shadowRadius = 6
         self.layer.addSublayer(circ)
         
         // Variables for arrow sizes; Described in the PDF file under Sources/main.pdf
@@ -147,8 +150,10 @@ public class Clock: UIView, UIPickerViewDelegate  {
         hourLayer.fillColor = handsColorPicker.currentColor.cgColor
         minuteLayer.fillColor = handsColorPicker.currentColor.cgColor
 
-        hourLayer.shadowOpacity = 0.3
-        minuteLayer.shadowOpacity = 0.3
+        hourLayer.shadowOpacity = 1
+        minuteLayer.shadowOpacity = 1
+        hourLayer.shadowRadius = 10
+        minuteLayer.shadowRadius = 10
         
         hourLayer.name = "hourHand"
         minuteLayer.name = "minuteHand"
@@ -160,7 +165,7 @@ public class Clock: UIView, UIPickerViewDelegate  {
         let currentMinuteForSentence = Int(getCurrentMinute())
         let currentHourForSentence = Int(getCurrentHour()) - 1
         
-        let sentence = UILabel(frame: CGRect(x: 0, y: 585, width: 600, height: 100))
+        let sentence = UILabel(frame: CGRect(x: 84, y: 585, width: 600, height: 100))
         sentence.textAlignment = .center
         
         let firstWordIndex = mod(Int(round(Double(currentMinuteForSentence) / 5.0)) - 1, 12)
@@ -181,12 +186,13 @@ public class Clock: UIView, UIPickerViewDelegate  {
         self.addSubview(sentence)
         
         // Add the circle behind the word "IS"
-        let circleBehindIS = getCircleLayer(x: 300, y: 300, r: 50, color: UIColor(rgb: 0xf2ebd5).cgColor)
-        circleBehindIS.shadowOpacity = 0.3
+        let circleBehindIS = getCircleLayer(x: 384, y: 300, r: 50, color: UIColor(rgb: 0xf2ebd5).cgColor)
+        circleBehindIS.shadowOpacity = 1
+        circleBehindIS.shadowRadius = 10
         self.layer.addSublayer(circleBehindIS)
         
         // Add the rotating "IS" label. Rotation is dependent on the hour arrow's direction, and is therefore calculated with the same formula.
-        let labelForIS = UILabel(frame: CGRect(x: 270, y: 270, width: 60, height: 60))
+        let labelForIS = UILabel(frame: CGRect(x: 354, y: 270, width: 60, height: 60))
         
         labelForIS.text = "IS"
         labelForIS.textAlignment = .center

@@ -2,7 +2,7 @@
  # Guixé Clock
  This playground was inspired by the [Guixé Clock](http://www.guixe.com/products/ALESSI/Wall_Clocks.html) created by Martí Guixé.
  
- The idea of this clock is to generate sentences: The clock's hands form an arrow, and if you follow the back of the arrow to its front, you'll get a sentence (i.e. Food is Desire).
+ The idea of this clock is to generate sentences: The clock's hands form an arrow , and if you follow the back of the arrow (minutes hand) to its front (hours hand), you'll get a sentence (i.e. Food is Desire). Notice how the word "is" is in the middle of the clock so that the sentences make sense.
  
  The original clock isn't very interactive: You can't change the words on the clock or the colours of it.
  
