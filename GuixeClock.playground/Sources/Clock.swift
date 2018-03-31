@@ -41,6 +41,7 @@ public class Clock: UIView, UIPickerViewDelegate  {
             $0!.stroke = 3
             $0!.delegate = self
             $0!.supportsShadesOfGray = true
+            $0!.colorToggleButton.addTarget(self, action: #selector(self.update), for: .touchUpInside) // This makes sure that when the greyscale colour button is clicked the screen will update, which doesn't happen by default, because pushing that button doesn't trigger the .editingDidEnd event.
             
             $0!.hexLabel.isHidden = true
             $0!.addButton.isHidden = true
