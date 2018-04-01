@@ -8,6 +8,7 @@ public class Clock: UIView, UIPickerViewDelegate  {
     var handsColorPicker: ChromaColorPicker!
     
     public init() {
+        // Initialise default words
         words = [
             "WORK",
             "BELIEF",
@@ -28,13 +29,13 @@ public class Clock: UIView, UIPickerViewDelegate  {
         
         // Initialise pickers and adjust to default colour
         backgroundColorPicker = ChromaColorPicker(frame: CGRect(x: 27, y: 700, width: 238, height: 238))
-        backgroundColorPicker.adjustToColor(UIColor(rgb: 0xb8bec6))
+        // We adjust to the default colour only at the end, so the button is initialised properly
         
         clockColorPicker = ChromaColorPicker(frame: CGRect(x: 265, y: 700, width: 238, height: 238))
-        clockColorPicker.adjustToColor(UIColor(rgb: 0x8a8a8a))
-        
+        clockColorPicker.adjustToColor(UIColor(rgb: 0x7ec4da))
+
         handsColorPicker = ChromaColorPicker(frame: CGRect(x: 503, y: 700, width: 238, height: 238))
-        handsColorPicker.adjustToColor(UIColor(rgb: 0xaf450e))
+        handsColorPicker.adjustToColor(UIColor(rgb: 0xedd514))
         
         // Set stroke, delegate and hide unnecessary components. Then, update UI when finish choosing colour and add to subview
         [backgroundColorPicker, clockColorPicker, handsColorPicker].forEach {
@@ -67,6 +68,10 @@ public class Clock: UIView, UIPickerViewDelegate  {
             self.addSubview($0)
         }
         
+        // We do this at the end so that the button press won't crash the program
+        backgroundColorPicker.colorToggleButton.sendActions(for: .touchUpInside)
+        backgroundColorPicker.adjustToColor(UIColor(rgb: 0x373737))
+
         update()
         
         // Get closest minute, at which we start a timer which updates the UIView every minute, so that the clock functions as expected from a clock.
@@ -104,7 +109,7 @@ public class Clock: UIView, UIPickerViewDelegate  {
     }
     
     @objc func update() {
-        // Update background color according to color picker
+        // Update background colour according to colour picker
         self.backgroundColor = backgroundColorPicker.currentColor
         
         // We must first remove the already-existing layers from the pervious update() call and UILabels
