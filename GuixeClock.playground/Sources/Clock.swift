@@ -18,7 +18,7 @@ public class Clock: UIView, UIPickerViewDelegate  {
             "APPLE",
             "FOOD",
             "LIFE",
-            "CONFLICT",
+            "PANIC",
             "LOVE",
             "DREAM"
         ]
@@ -28,13 +28,13 @@ public class Clock: UIView, UIPickerViewDelegate  {
         
         // Initialise pickers and adjust to default colour
         backgroundColorPicker = ChromaColorPicker(frame: CGRect(x: 27, y: 700, width: 238, height: 238))
-        backgroundColorPicker.adjustToColor(UIColor.cyan)
+        backgroundColorPicker.adjustToColor(UIColor(rgb: 0xb8bec6))
         
         clockColorPicker = ChromaColorPicker(frame: CGRect(x: 265, y: 700, width: 238, height: 238))
-        clockColorPicker.adjustToColor(UIColor.blue)
+        clockColorPicker.adjustToColor(UIColor(rgb: 0x8a8a8a))
         
         handsColorPicker = ChromaColorPicker(frame: CGRect(x: 503, y: 700, width: 238, height: 238))
-        handsColorPicker.adjustToColor(UIColor.purple)
+        handsColorPicker.adjustToColor(UIColor(rgb: 0xaf450e))
         
         // Set stroke, delegate and hide unnecessary components. Then, update UI when finish choosing colour and add to subview
         [backgroundColorPicker, clockColorPicker, handsColorPicker].forEach {
@@ -190,6 +190,10 @@ public class Clock: UIView, UIPickerViewDelegate  {
         
         sentence.tag = 99
         
+        // We make sure the background isn't too dark. If it is, the text colour is set to white.
+        let titleColorForSentence: UIColor = brightness(color: backgroundColorPicker.currentColor) < 0.25 ? .white : .black
+        sentence.textColor = titleColorForSentence
+        
         self.addSubview(sentence)
         
         // Add the circle behind the word "IS"
@@ -210,13 +214,16 @@ public class Clock: UIView, UIPickerViewDelegate  {
         
         self.addSubview(labelForIS)
         
+        // We make sure the background isn't too dark. If it is, the text colour is set to white.
+        let titleColorForButton: UIColor = brightness(color: clockColorPicker.currentColor) < 0.25 ? .white : .black
+        
         // Initialise the buttons with the corresponding words and add the target upon click
         for hr in 1...12 {
             let coords: CGPoint = getCoordinatesOfLabelByHour(hr: hr)
             let button: UIButton = UIButton(frame: CGRect(x: coords.x - 25, y: coords.y - 25, width: 100, height: 50))
             
             button.setTitle(words[hr - 1], for: .normal)
-            button.setTitleColor(.black, for: .normal)
+            button.setTitleColor(titleColorForButton, for: .normal)
             button.titleLabel?.font = getSoWhatFont(size: 30)
             button.sizeToFit()
             button.titleLabel!.textAlignment = .center
@@ -234,7 +241,7 @@ public class Clock: UIView, UIPickerViewDelegate  {
     }
 }
 
-// Clock must conform to the ChromaColorPickerDelegate delegate. When a color is picked, we update the screen.
+// Clock must conform to the ChromaColorPickerDelegate delegate. When a colour is picked, we update the screen.
 extension Clock: ChromaColorPickerDelegate {
     public func colorPickerDidChooseColor(_ colorPicker: ChromaColorPicker, color: UIColor) {
         update()

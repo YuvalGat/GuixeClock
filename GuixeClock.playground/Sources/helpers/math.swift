@@ -12,8 +12,8 @@ import UIKit
  The PDF File was generated with LaTeX using TikZ.
  */
 
-let xOffset: Double = 384.0
-let yOffset: Double = 300.0
+fileprivate let xOffset: Double = 384.0
+fileprivate let yOffset: Double = 300.0
 
 public func getFrontArrowCoordinatesByTime(hr: Double, min: Double, h: Double, l1: Double, d: Double, k1: Double) -> [String: CGPoint] {
     let hrTheta: Double = Double(mod(Int(round(hr * 30 + min / 2)), 360))
@@ -77,6 +77,7 @@ public func getBackArrowCoordinatesByTime(min: Double, h: Double, l2: Double, k2
     ]
 }
 
+// sin and cos in degrees
 public func sind(_ degrees: Double) -> Double {
     return __sinpi(degrees / 180.0)
 }
@@ -85,8 +86,20 @@ public func cosd(_ degrees: Double) -> Double {
     return __cospi(degrees / 180.0)
 }
 
+// Custom mod function, works for negatives
 public func mod(_ a: Int, _ n: Int) -> Int {
     let r: Int = a % n
     return r >= 0 ? r : r + n
+}
+
+// Formula for calculating brightness of colour
+func brightness(color: UIColor) -> CGFloat {
+    let cg: CGColor = color.cgColor
+    
+    let r: CGFloat = cg.components![0]
+    let g: CGFloat = cg.components![1]
+    let b: CGFloat = cg.components![2]
+    
+    return (299 * r + 587 * g + 114 * b) / 1000
 }
 
