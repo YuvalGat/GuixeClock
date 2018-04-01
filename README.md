@@ -14,5 +14,5 @@ The generated sentence will appear below the clock itself.
 - Note:
 In order to get the coordinates of the arrow based on time and other variables (such as lengths of specific parts of the arrow), I had to use a lot of mathematics. For your convenience, I made a PDF file with the corresponding variables and equations using LaTeX and TikZ. It can be found under /Sources/main.pdf.
 
-To get started, clone this repository, open the Assistant Editor and drag the view divider to the left, until you see the whole frame.
+To get started, open the Assistant Editor and drag the view divider to the left, until you see the whole frame.
 If you are using a MacBook with a small display, make sure you scroll down to see the entirety of the frame (if you use two fingers to scroll, make sure you don't scroll inside the frame but in the grey area around it).
